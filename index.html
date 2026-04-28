@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مُراقب النفس والدين - لوحة التحكم</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="main-wrapper">
+    <header class="main-header">
+        <h1>مُراقب النفس والدين</h1>
+        <p class="subtitle">"حاسبوا أنفسكم قبل أن تُحاسبوا"</p>
+    </header>
+
+    <section class="stats-dashboard">
+        <div class="stat-card blue-border">
+            <div class="card-header">🕋 الفرائض</div>
+            <div class="card-value"><span id="statPrayers">0</span>/100</div>
+            <div class="card-loss">خسارة صلوات: <span id="prayerLoss">0</span>-</div>
+        </div>
+        <div class="stat-card green-border">
+            <div class="card-header">✨ السنن والوتر</div>
+            <div class="card-value"><span id="statSunnah">0</span>/100</div>
+        </div>
+        <div class="stat-card orange-border">
+            <div class="card-header">☀️ أذكار اليوم</div>
+            <div class="card-value"><span id="statAthkar">0</span>/100</div>
+        </div>
+        <div class="stat-card gold-border">
+            <div class="card-header">🤲 بعد الصلاة</div>
+            <div class="card-value"><span id="statPostPrayer">0</span>/100</div>
+        </div>
+        <div class="stat-card danger-card">
+            <div class="card-header">🚫 إجمالي الخصومات</div>
+            <div class="card-value red-text"><span id="totalLoss">0</span>-</div>
+        </div>
+    </section>
+
+    <section class="day-overview">
+        <div class="overall-progress-card" id="dayStatusBox">
+            <div class="card-header">مؤشر الإنجاز اليومي</div>
+            
+            <div class="raw-points-display">
+                إجمالي رصيد الدرجات: <b id="rawTotalPoints" style="color: var(--blue-grad);">0</b> نقطة
+            </div>
+
+            <div class="overall-value"><span id="totalPercent">0</span>%</div>
+            <div class="overall-text" id="statusText">ابدأ يومك بذكر الله</div>
+            <div class="custom-progress-bar">
+                <div id="mainProgressFill" class="progress-bar-fill"></div>
+            </div>
+        </div>
+        
+        <div id="warningAlert" class="warning-alert-card" style="display: none;">
+            ⚠️ تحذير شديد: تم تسجيل كبائر (غيبة/نميمة/كذب) - استغفر وجدد التوبة فوراً!
+        </div>
+    </section>
+
+    <div class="sections-grid">
+        <div class="column">
+            <section class="card">
+                <h3>🕋 صلوات الفريضة</h3>
+                <div class="input-group">
+                    <select id="pName">
+                        <option value="الفجر">الفجر</option>
+                        <option value="الظهر">الظهر</option>
+                        <option value="العصر">العصر</option>
+                        <option value="المغرب">المغرب</option>
+                        <option value="العشاء">العشاء</option>
+                    </select>
+                    <select id="pCase">
+                        <option value="20">قبل الأذان (+20)</option>
+                        <option value="15">بعد الأذان (+15)</option>
+                        <option value="10">بعد الإقامة - ركعة 1 (+10)</option>
+                        <option value="7">أدركت منتصفها (+7)</option>
+                        <option value="5">منفرد في وقتها (+5)</option>
+                        <option value="-20">فائتة - خارج الوقت (-20)</option>
+                    </select>
+                    <button class="btn-primary" onclick="addPrayer()">تسجيل الفريضة</button>
+                </div>
+            </section>
+
+            <section class="card">
+                <h3>✨ السنن الرواتب والوتر</h3>
+                <div class="sunnah-options">
+                    <button onclick="addSunnah(15, 'سنة الفجر')">الفجر (15)</button>
+                    <button onclick="addSunnah(25, 'سنة الظهر')">الظهر (25)</button>
+                    <button onclick="addSunnah(10, 'سنة العصر')">العصر (10)</button>
+                    <button onclick="addSunnah(15, 'سنة المغرب')">المغرب (15)</button>
+                    <button onclick="addSunnah(15, 'سنة العشاء')">العشاء (15)</button>
+                    <button onclick="addSunnah(20, 'الوتر')">الوتر (20)</button>
+                </div>
+            </section>
+
+            <section class="card">
+                <h3>📝 أفعال مخصصة من اختيارك</h3>
+                <div class="input-group">
+                    <input type="text" id="customDeedText" placeholder="اكتب الفعل (مثال: صدقة، بر والدين...)">
+                    <div style="display: flex; gap: 10px; margin-top: 5px;">
+                        <button class="btn-success" style="flex:1" onclick="addCustomDeed('good')">عمل صالح (+5)</button>
+                        <button class="btn-warn" style="flex:1" onclick="addCustomDeed('bad')">انتكاسة (-10)</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div class="column">
+            <section class="card">
+                <h3>🌅 أذكار الصباح</h3>
+                <div class="athkar-controls">
+                    <div class="btn-group">
+                        <button class="btn-sub" onclick="setAthkar('sabah', 50)">كاملة (50)</button>
+                        <button class="btn-sub" onclick="setAthkar('sabah', 25)">متوسطة (25)</button>
+                        <button class="btn-sub" onclick="setAthkar('sabah', 10)">قليلة (10)</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="card">
+                <h3>🌃 أذكار المساء</h3>
+                <div class="athkar-controls">
+                    <div class="btn-group">
+                        <button class="btn-sub" onclick="setAthkar('masaa', 50)">كاملة (50)</button>
+                        <button class="btn-sub" onclick="setAthkar('masaa', 25)">متوسطة (25)</button>
+                        <button class="btn-sub" onclick="setAthkar('masaa', 10)">قليلة (10)</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="card">
+                <h3>🤲 أذكار ما بعد الصلاة</h3>
+                <div class="input-group">
+                    <select id="postPrayerName">
+                        <option value="fajr">أذكار بعد الفجر</option>
+                        <option value="dhuhr">أذكار بعد الظهر</option>
+                        <option value="asr">أذكار بعد العصر</option>
+                        <option value="maghrib">أذكار بعد المغرب</option>
+                        <option value="isha">أذكار بعد العشاء</option>
+                    </select>
+                    <div class="btn-group">
+                        <button class="btn-sub" onclick="setPostPrayer(20)">قرأت كاملة (20)</button>
+                        <button class="btn-sub" onclick="setPostPrayer(10)">نصفها (10)</button>
+                        <button class="btn-sub" onclick="setPostPrayer(5)">قليلاً (5)</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="card counter-section">
+                <h3>🔄 عداد الذكر (كل 4 عدات = 1 درجة)</h3>
+                <div class="counter-control">
+                    <div class="tap-circle" onclick="tapCounter()">سبّح</div>
+                    <div class="counter-info">
+                        <div id="clickCount">0</div>
+                        <p>نقاط المسبحة: +<span id="counterPoints">0</span></p>
+                        <div class="manual-entry">
+                            <input type="number" id="manualCountInput" placeholder="أدخل عدد المسبحة">
+                            <button class="btn-add-manual" onclick="addManualCount()">إضافة للعداد</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <section class="card red-zone-card">
+        <h3>🚫 كبائر اللسان (خصم مباشر)</h3>
+        <div class="danger-btns">
+            <button class="btn-danger" onclick="redZone('غيبة', -100)">غيبة (-100)</button>
+            <button class="btn-danger" onclick="redZone('نميمة', -100)">نميمة (-100)</button>
+            <button class="btn-danger" onclick="redZone('كذب', -50)">كذب (-50)</button>
+            <button class="btn-danger" onclick="addCustomDeed('bad', 'انتكاسة عامة')">انتكاسة (-10)</button>
+        </div>
+    </section>
+
+    <section class="log-section">
+        <div class="log-header">
+            <h3>سجل المحاسبة اليومي</h3>
+            <div class="log-actions">
+                <button class="btn-history" onclick="toggleHistory()">📅 الأيام السابقة</button>
+                <button class="btn-reset" onclick="startNewDay()">حفظ اليوم وبدء يوم جديد</button>
+            </div>
+        </div>
+        <div id="logItems" class="log-items"></div>
+    </section>
+</div>
+
+<div id="historyModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>الأرشيف التاريخي</h2>
+            <span class="close" onclick="toggleHistory()">&times;</span>
+        </div>
+        <div id="historyList"></div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
